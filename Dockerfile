@@ -9,8 +9,21 @@ LABEL maintainer="Stian Larsen,sparklyballs,aptalca"
 # environment settings
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2
 
-# install packages
+# compile fancyindex
 RUN \
+ wget http://nginx.org/download/nginx-1.12.2.tar.gz /tmp
+ gunzip -c /tmp/nginx-1.12.2.tar.gz | tar -xvf -
+
+ wget https://github.com/aperezdc/ngx-fancyindex/archive/v0.4.3.tar.gz /tmp
+ gunzip -c v0.4.3.tar.gz | tar -xvf -
+
+ cd /tmp/nginx-1.12.2
+ ./configure --add-module=../v0.4.3 [--with-http_addition_module]
+ make
+ make install
+
+# install packages
+# RUN \
  apk add --no-cache \
 	curl \
 	memcached \
